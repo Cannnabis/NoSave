@@ -1,0 +1,28 @@
+name: Build NoSave
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build Release
+      run: msbuild NoSave.sln /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=bin\Release\
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: NoSave-Release
+        path: |
+          NoSave/bin/Release/NoSave.exe
+          NoSave/bin/Release/NoSave.exe.config
